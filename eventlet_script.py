@@ -4,35 +4,27 @@ import csv
 import time 
 import sys
 import os
+import pandas as pd
 
 if len(sys.argv) > 1:
   file_path = sys.argv[1]
   directory_to_save = sys.argv[2]
 else:
   #file_path = '/Users/myazdaniUCSD/Documents/twitter_data_grant/data/results_sample.csv'
-  file_path = '../../data/all_tweets/all_links/results.csv'
+  file_path = "~/Downloads/Sentiment-polarity-DFE.csv"
   #directory_to_save = '/Users/myazdaniUCSD/Documents/twitter_data_grant/data/sample_tweets/'
-  directory_to_save = '../../data/all_tweets/'
+  directory_to_save = '~/Desktop/JPGs'
 
 
-
-def return_rows(filename, file_encoding = 'rU'):
-  with open(filename, file_encoding) as f: 
-    reader = csv.reader(f, delimiter='\t', quotechar="'")
-    rowsInData = [row for row in reader]
-  return rowsInData 
-
-
-
-file_urls = return_rows(file_path)
-#file_urls = file_urls[-1000:]
+df = pd.read_csv("/Users/myazdaniUCSD/Downloads/Sentiment-polarity-DFE.csv")
+file_urls = list(df["imageurl"])
 
 start_time = time.time()
 
 def fetch(file_url):
   try:
-    url = file_url[1]
-    filename = file_url[0]
+    url = file_url
+    filename = file_url.split("/")[-1]
     #urllib.urlretrieve(url, directory_to_save+filename)
     
     tweet = urllib2.urlopen(url).read()
