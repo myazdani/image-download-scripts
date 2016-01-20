@@ -1,7 +1,7 @@
 import eventlet
 from eventlet.green import urllib2
 import csv
-import time 
+import time
 import sys
 import os
 import pandas as pd
@@ -11,12 +11,12 @@ if len(sys.argv) > 1:
   directory_to_save = sys.argv[2]
 else:
   #file_path = '/Users/myazdaniUCSD/Documents/twitter_data_grant/data/results_sample.csv'
-  file_path = "~/Downloads/Sentiment-polarity-DFE.csv"
+  file_path = "../../../data/CrowdFlowerImageSentiment/Sentiment-polarity-DFE.csv"
   #directory_to_save = '/Users/myazdaniUCSD/Documents/twitter_data_grant/data/sample_tweets/'
-  directory_to_save = '~/Desktop/JPGs'
+  directory_to_save = '../../../data/CrowdFlowerImageSentiment/JPGs'
 
 
-df = pd.read_csv("/Users/myazdaniUCSD/Downloads/Sentiment-polarity-DFE.csv")
+df = pd.read_csv(file_path)
 file_urls = list(df["imageurl"])
 
 start_time = time.time()
@@ -26,7 +26,7 @@ def fetch(file_url):
     url = file_url
     filename = file_url.split("/")[-1]
     #urllib.urlretrieve(url, directory_to_save+filename)
-    
+
     tweet = urllib2.urlopen(url).read()
 
     dir = filename[29:42].replace("_", "/")
@@ -41,14 +41,14 @@ def fetch(file_url):
     return msg
 
 
-pool = eventlet.GreenPool(size = 5)
+pool = eventlet.GreenPool(size = 100)
 start_time = time.time()
 success_urls = []
 failed_urls = []
 for body in pool.imap(fetch, file_urls):
-    if body != None: 
+    if body != None:
         print body
-        failed_urls.append(body[0])    
+        failed_urls.append(body[0])
 end_time = time.time()
 
 print("Elapsed time was %g seconds" % (end_time - start_time))
